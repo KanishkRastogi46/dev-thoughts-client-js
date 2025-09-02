@@ -1,6 +1,7 @@
-import '@mantine/core/styles.css'
-import '@mantine/notifications/styles.css'
+import '@mantine/core/styles.css';
+import '@mantine/notifications/styles.css';
 
+import React from 'react';
 import {
   isRouteErrorResponse,
   Links,
@@ -8,23 +9,22 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-} from "react-router"
-
-import { ColorSchemeScript, MantineProvider, mantineHtmlProps } from '@mantine/core'
-import { Notifications } from '@mantine/notifications'
-import type { Route } from './+types/root'
-import { theme } from './theme'
+} from 'react-router';
 
 import {
-  QueryClient,
-  QueryClientProvider,
-} from '@tanstack/react-query'
+  ColorSchemeScript,
+  MantineProvider,
+  mantineHtmlProps,
+} from '@mantine/core';
+import { Notifications } from '@mantine/notifications';
+import type { Route } from './+types/root';
+import { theme } from './theme';
+
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const queryClient = new QueryClient({
-  defaultOptions: {
-    
-  }
-})
+  defaultOptions: {},
+});
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -37,7 +37,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        <MantineProvider theme={theme} defaultColorScheme="dark" withCssVariables>
+        <MantineProvider
+          theme={theme}
+          defaultColorScheme="dark"
+          withCssVariables
+        >
           <QueryClientProvider client={queryClient}>
             <Notifications />
             {children}
@@ -47,23 +51,23 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Scripts />
       </body>
     </html>
-  )
+  );
 }
 
 export default function App() {
-  return <Outlet />
+  return <Outlet />;
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
-  let message = "Oops!"
-  let details = "An unexpected error occurred."
+  let message = 'Oops!';
+  let details = 'An unexpected error occurred.';
   let stack: string | undefined;
 
   if (isRouteErrorResponse(error)) {
-    message = error.status === 404 ? "404" : "Error"
+    message = error.status === 404 ? '404' : 'Error';
     details =
       error.status === 404
-        ? "The requested page could not be found."
+        ? 'The requested page could not be found.'
         : error.statusText || details;
   } else if (import.meta.env.DEV && error && error instanceof Error) {
     details = error.message;
@@ -80,5 +84,5 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
         </pre>
       )}
     </main>
-  )
+  );
 }
