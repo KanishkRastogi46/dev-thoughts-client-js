@@ -1,5 +1,6 @@
 import React from 'react';
 import type { Route } from './+types/home';
+import { Text } from '@mantine/core';
 
 // eslint-disable-next-line no-empty-pattern
 export function meta({}: Route.MetaArgs) {
@@ -12,7 +13,9 @@ export function meta({}: Route.MetaArgs) {
 export default function Home() {
   return (
     <>
-      <h1>Hello World</h1>
+      <Text fw={'bold'} size="40px">
+        Hello World
+      </Text>
     </>
   );
 }
