@@ -101,7 +101,16 @@ export function Register(): React.JSX.Element {
               >
                 Signup
               </Button>
-              <NavLink to={'/auth/login'}>Signin</NavLink>
+              <NavLink to="/auth/login">
+                <Text
+                  size="0.9rem"
+                  mb={'md'}
+                  ta={'center'}
+                  style={{ textDecoration: 'underline', color: 'white' }}
+                >
+                  Signin
+                </Text>
+              </NavLink>
             </Flex>
           </Box>
         </Flex>

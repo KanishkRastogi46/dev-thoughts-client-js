@@ -48,8 +48,19 @@ export function Login(): React.JSX.Element {
                 label="Password"
                 variant="filled"
                 w={{ base: '90%', xl: '50%' }}
-                mb="md"
               />
+              <Flex justify={'flex-end'} w={{ base: '90%', xl: '50%' }}>
+                <NavLink to="/auth/forgot-password" className={'text-right'}>
+                  <Text
+                    size="0.9rem"
+                    mb={'md'}
+                    ta={'right'}
+                    style={{ textDecoration: 'underline', color: 'white' }}
+                  >
+                    Forget Password?
+                  </Text>
+                </NavLink>
+              </Flex>
               <Button
                 ta={'center'}
                 color="orange.5"
@@ -59,7 +70,16 @@ export function Login(): React.JSX.Element {
               >
                 Signin
               </Button>
-              <NavLink to={'/auth/register'}>Signup</NavLink>
+              <NavLink to="/auth/register">
+                <Text
+                  size="0.9rem"
+                  mb={'md'}
+                  ta={'center'}
+                  style={{ textDecoration: 'underline', color: 'white' }}
+                >
+                  Signup
+                </Text>
+              </NavLink>
             </Flex>
           </Box>
         </Flex>
