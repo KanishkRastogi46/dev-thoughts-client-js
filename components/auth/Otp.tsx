@@ -1,8 +1,41 @@
 import React from 'react';
 import { Box, Flex, Text, PinInput, Button } from '@mantine/core';
 import { NavLink } from 'react-router';
+import { useOtpMuatation } from 'api/mutations/auth/otp.mutation';
+import { notifications } from '@mantine/notifications';
 
 export function Otp(): React.JSX.Element {
+  const [otp, setOtp] = React.useState<string>('');
+  const [loading, setLoading] = React.useState<boolean>(false);
+
+  const { mutate: otpMutate } = useOtpMuatation();
+
+  const handleSubmit = () => {
+    setLoading(true);
+    otpMutate(
+      { otp },
+      {
+        onSuccess: (response) => {
+          if (response.status === 200) {
+            notifications.show({
+              color: 'green',
+              title: 'Success',
+              message: 'OTP verified successfully',
+            });
+          }
+        },
+        onError: (error) => {
+          notifications.show({
+            color: 'red',
+            title: 'Error',
+            message: error?.message || 'Something went wrong',
+          });
+        },
+      }
+    );
+    setLoading(false);
+  };
+
   return (
     <Box mih={'auto'} h="100vh" w="100vw" bg={'blue.9'}>
       <Flex h="100%" w="100%" justify={'center'} align={'center'}>
@@ -36,6 +69,7 @@ export function Otp(): React.JSX.Element {
                 w={'100%'}
                 mb={'md'}
                 ta={'center'}
+                onChange={(value) => setOtp(value)}
               />
             </Flex>
             <Button
@@ -44,6 +78,9 @@ export function Otp(): React.JSX.Element {
               w={{ base: '50%', xl: '25%' }}
               radius={'lg'}
               mb={'md'}
+              loading={loading}
+              disabled={otp.length !== 6}
+              onClick={handleSubmit}
             >
               Verify
             </Button>

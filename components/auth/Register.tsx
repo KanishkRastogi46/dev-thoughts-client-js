@@ -7,13 +7,61 @@ import {
   TextInput,
   PasswordInput,
 } from '@mantine/core';
+import { notifications } from '@mantine/notifications';
+import { useRegisterMuatation } from 'api/mutations/auth/register.mutation';
 import React from 'react';
 import { NavLink } from 'react-router';
+import type { IRegister } from 'utils/types/auth.type';
 
 export function Register(): React.JSX.Element {
+  const [payload, setPayload] = React.useState<IRegister>({
+    firstName: '',
+    lastName: '',
+    email: '',
+    username: '',
+    country: 0,
+    countryCode: 0,
+    phoneNumber: '',
+    password: '',
+    confirmPassword: '',
+  });
+
+  const [loading, setLoading] = React.useState<boolean>(false);
+
+  const { mutate: registerMutate } = useRegisterMuatation();
+
+  const checkFieldNotEmpty = (data: IRegister) => {
+    return Object.values(data).every((value) => value !== '');
+  };
+
+  const handleSubmit = () => {
+    if (checkFieldNotEmpty(payload)) {
+      setLoading(true);
+      registerMutate(payload, {
+        onSuccess: (response) => {
+          if (response.status === 201) {
+            notifications.show({
+              color: 'green',
+              title: 'Success',
+              message: 'User registered successfully',
+            });
+          }
+        },
+        onError: (error) => {
+          notifications.show({
+            color: 'red',
+            title: 'Error',
+            message: error?.message || 'Something went wrong',
+          });
+        },
+      });
+      setLoading(false);
+    }
+  };
+
   return (
     <>
-      <Box mih={'auto'} h="100vh" w="100vw" bg={'blue.9'}>
+      <Box mih={'100vh'} h="auto" w="100vw" bg={'blue.9'}>
         <Flex h="100%" w="100%" justify={'center'} align={'center'}>
           <Box
             w="100%"
@@ -42,19 +90,32 @@ export function Register(): React.JSX.Element {
                 label="First Name"
                 variant="filled"
                 w={{ base: '90%', xl: '50%' }}
+                value={payload.firstName}
+                onChange={(e) =>
+                  setPayload((prev) => ({ ...prev, firstName: e.target.value }))
+                }
               />
               <TextInput
                 placeholder="Enter your last name"
                 label="Last Name"
                 variant="filled"
                 w={{ base: '90%', xl: '50%' }}
+                value={payload.lastName}
+                onChange={(e) =>
+                  setPayload((prev) => ({ ...prev, lastName: e.target.value }))
+                }
               />
               <TextInput
                 required
                 placeholder="Enter your email"
                 label="Email"
+                type="email"
                 variant="filled"
                 w={{ base: '90%', xl: '50%' }}
+                value={payload.email}
+                onChange={(e) =>
+                  setPayload((prev) => ({ ...prev, email: e.target.value }))
+                }
               />
               <TextInput
                 required
@@ -62,6 +123,10 @@ export function Register(): React.JSX.Element {
                 label="username"
                 variant="filled"
                 w={{ base: '90%', xl: '50%' }}
+                value={payload.username}
+                onChange={(e) =>
+                  setPayload((prev) => ({ ...prev, username: e.target.value }))
+                }
               />
               <Select
                 required
@@ -76,6 +141,13 @@ export function Register(): React.JSX.Element {
                 variant="filled"
                 leftSection={<Text>+91</Text>}
                 w={{ base: '90%', xl: '50%' }}
+                value={payload.phoneNumber}
+                onChange={(e) =>
+                  setPayload((prev) => ({
+                    ...prev,
+                    phoneNumber: e.target.value,
+                  }))
+                }
               />
               <PasswordInput
                 required
@@ -83,6 +155,10 @@ export function Register(): React.JSX.Element {
                 label="Password"
                 variant="filled"
                 w={{ base: '90%', xl: '50%' }}
+                value={payload.password}
+                onChange={(e) =>
+                  setPayload((prev) => ({ ...prev, password: e.target.value }))
+                }
               />
               <PasswordInput
                 required
@@ -91,6 +167,13 @@ export function Register(): React.JSX.Element {
                 variant="filled"
                 w={{ base: '90%', xl: '50%' }}
                 mb={'md'}
+                value={payload.confirmPassword}
+                onChange={(e) =>
+                  setPayload((prev) => ({
+                    ...prev,
+                    confirmPassword: e.target.value,
+                  }))
+                }
               />
               <Button
                 ta={'center'}
@@ -98,6 +181,9 @@ export function Register(): React.JSX.Element {
                 w={{ base: '50%', xl: '25%' }}
                 radius={'lg'}
                 mb={'md'}
+                disabled={!checkFieldNotEmpty(payload)}
+                loading={loading}
+                onClick={handleSubmit}
               >
                 Signup
               </Button>

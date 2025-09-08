@@ -24,6 +24,7 @@ export interface IForgotPassword {
 }
 
 export interface IResetPassword {
+  email: string;
   password: string;
   confirmPassword: string;
 }

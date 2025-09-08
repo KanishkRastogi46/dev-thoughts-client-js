@@ -11,5 +11,6 @@ export default [
     route(routes.register, 'routes/auth/register/page.tsx'),
     route(routes.otp, 'routes/auth/otp/page.tsx'),
     route(routes.forgotPassword, 'routes/auth/forgot-password/page.tsx'),
+    route(routes.resetPassword, 'routes/auth/reset-password/page.tsx'),
   ]),
 ] satisfies RouteConfig;
