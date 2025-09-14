@@ -9,18 +9,25 @@ import {
 } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useRegisterMuatation } from 'api/mutations/auth/register.mutation';
-import React from 'react';
-import { NavLink } from 'react-router';
+import {
+  useGetCountryList,
+  type ICountry,
+} from 'api/queries/profile/get-country-list.query';
+import React, { useMemo } from 'react';
+import { NavLink, useNavigate } from 'react-router';
 import type { IRegister } from 'utils/types/auth.type';
+import { otp } from 'common/constants/routes-def';
 
 export function Register(): React.JSX.Element {
+  const navigate = useNavigate();
+
   const [payload, setPayload] = React.useState<IRegister>({
     firstName: '',
     lastName: '',
     email: '',
     username: '',
-    country: 0,
-    countryCode: 0,
+    country: '',
+    countryCode: '',
     phoneNumber: '',
     password: '',
     confirmPassword: '',
@@ -28,7 +35,15 @@ export function Register(): React.JSX.Element {
 
   const [loading, setLoading] = React.useState<boolean>(false);
 
+  const { data: countryList } = useGetCountryList();
   const { mutate: registerMutate } = useRegisterMuatation();
+
+  const countryArray = useMemo(() => {
+    if (countryList) {
+      return countryList?.map((country: ICountry) => country.name);
+    }
+    return [];
+  }, [countryList]);
 
   const checkFieldNotEmpty = (data: IRegister) => {
     return Object.values(data).every((value) => value !== '');
@@ -44,8 +59,11 @@ export function Register(): React.JSX.Element {
               color: 'green',
               title: 'Success',
               message: 'User registered successfully',
+              autoClose: 3000,
             });
           }
+          localStorage.setItem('userid', response.headers['x-user-id'] || '');
+          navigate(otp, { replace: true });
         },
         onError: (error) => {
           notifications.show({
@@ -61,7 +79,7 @@ export function Register(): React.JSX.Element {
 
   return (
     <>
-      <Box mih={'100vh'} h="auto" w="100vw" bg={'blue.9'}>
+      <Box h={'100vh'} w="100vw" bg={'blue.9'} style={{ overflowY: 'auto' }}>
         <Flex h="100%" w="100%" justify={'center'} align={'center'}>
           <Box
             w="100%"
@@ -132,14 +150,29 @@ export function Register(): React.JSX.Element {
                 required
                 label="Country"
                 placeholder="Select your country"
+                data={countryArray}
                 variant="filled"
                 w={{ base: '90%', xl: '50%' }}
+                onChange={(value) => {
+                  setPayload((prev) => ({
+                    ...prev,
+                    country: value as string,
+                    countryCode:
+                      countryList?.find((country) => country.name === value)
+                        ?.code || '',
+                  }));
+                }}
               />
               <TextInput
                 required
                 label="Phone Number"
                 variant="filled"
-                leftSection={<Text>+91</Text>}
+                type="number"
+                leftSection={
+                  <Text c={'white'}>
+                    {payload.countryCode ? payload.countryCode : '+91'}
+                  </Text>
+                }
                 w={{ base: '90%', xl: '50%' }}
                 value={payload.phoneNumber}
                 onChange={(e) =>

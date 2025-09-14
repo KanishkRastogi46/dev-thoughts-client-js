@@ -9,10 +9,13 @@ import {
 import { notifications } from '@mantine/notifications';
 import { useLoginMuatation } from 'api/mutations/auth/login.mutation';
 import React from 'react';
-import { NavLink } from 'react-router';
+import { NavLink, useNavigate } from 'react-router';
 import type { ILogin } from 'utils/types/auth.type';
+import { otp } from 'common/constants/routes-def';
 
 export function Login(): React.JSX.Element {
+  const navigate = useNavigate();
+
   const [payload, setPayload] = React.useState<ILogin>({
     identifier: '',
     password: '',
@@ -37,6 +40,7 @@ export function Login(): React.JSX.Element {
               title: 'Success',
               message: 'User logged in successfully',
             });
+            navigate(otp, { replace: true });
           }
         },
         onError: (error) => {

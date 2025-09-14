@@ -3,8 +3,8 @@ export interface IRegister {
   lastName: string;
   email: string;
   username: string;
-  country: number;
-  countryCode: number;
+  country: string;
+  countryCode: string;
   phoneNumber: string;
   password: string;
   confirmPassword: string;

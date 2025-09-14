@@ -33,7 +33,6 @@ const queryClient = new QueryClient({
       retry: 1,
       retryDelay: (attempt: number) => Math.min(1000 * 2 ** attempt, 30000),
       refetchOnReconnect: true,
-      enabled: false,
     },
     mutations: {
       retry: 1,
@@ -69,7 +68,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
             withCssVariables
           >
             <QueryClientProvider client={queryClient}>
-              <Notifications />
+              <Notifications position="top-right" />
               {children}
             </QueryClientProvider>
           </MantineProvider>
